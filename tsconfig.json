@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "twitter/*": ["./src/*"]
+      "twitter/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
