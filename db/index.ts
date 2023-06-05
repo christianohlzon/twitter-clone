@@ -8,15 +8,6 @@ const connection = connect({
   password: process.env["DATABASE_PASSWORD"],
 });
 
-const db = drizzle(connection, {
+export const db = drizzle(connection, {
   schema,
 });
-
-export const getUsers = async () => {
-  const result = await db.query.users.findMany({
-    with: {
-      posts: true,
-    },
-  });
-  return result;
-};

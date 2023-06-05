@@ -1,14 +1,20 @@
 import {
+  boolean,
   int,
-  mysqlEnum,
   mysqlTable,
   serial,
   uniqueIndex,
   varchar,
-  timestamp,
 } from "drizzle-orm/mysql-core";
+import { relations, InferModel } from "drizzle-orm";
 
-import { relations } from "drizzle-orm";
+export type User = InferModel<typeof users>;
+export type Post = InferModel<typeof posts>;
+export type PostLike = InferModel<typeof postLikes>;
+export interface FeedEntry extends InferModel<typeof feedEntries> {
+  post: Post;
+  user: User;
+}
 
 export const users = mysqlTable(
   "users",
@@ -19,17 +25,19 @@ export const users = mysqlTable(
   },
   (users) => ({
     usernameIndex: uniqueIndex("username_idx").on(users.username),
-  }),
+  })
 );
 
 export const usersRelations = relations(users, ({ many }) => ({
-  posts: many(posts),
+  feedEntries: many(feedEntries),
 }));
 
 export const posts = mysqlTable("posts", {
   id: serial("id").primaryKey(),
   content: varchar("content", { length: 140 }),
   authorId: int("author_id").notNull(),
+  replyToPostId: int("reply_to_post_id"),
+  quoteToPostId: int("quote_to_post_id"),
 });
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
@@ -45,4 +53,16 @@ export const postLikes = mysqlTable("post_likes", {
 
 export const postLikesRelations = relations(postLikes, ({ one }) => ({
   post: one(posts, { fields: [postLikes.postId], references: [posts.id] }),
+}));
+
+export const feedEntries = mysqlTable("feed_entries", {
+  id: serial("id").primaryKey(),
+  isRepost: boolean("is_repost").default(false),
+  postId: int("post_id").notNull(),
+  userId: int("user_id").notNull(),
+});
+
+export const feedEntriesRelations = relations(feedEntries, ({ one }) => ({
+  post: one(posts, { fields: [feedEntries.postId], references: [posts.id] }),
+  user: one(users, { fields: [feedEntries.userId], references: [users.id] }),
 }));
