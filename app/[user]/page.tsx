@@ -8,10 +8,5 @@ export default async function User({ params }: { params: { user: string } }) {
     return <div>User not found</div>;
   }
 
-  return (
-    <div>
-      <h1>User: @{params.user}</h1>
-      <Feed feedEntries={user.feedEntries} />
-    </div>
-  );
+  return <Feed feedEntries={user.feedEntries} />;
 }

@@ -20,8 +20,9 @@ export const users = mysqlTable(
   "users",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }).notNull(),
-    username: varchar("username", { length: 256 }).notNull(),
+    name: varchar("name", { length: 50 }).notNull(),
+    username: varchar("username", { length: 20 }).notNull(),
+    bio: varchar("bio", { length: 140 }),
   },
   (users) => ({
     usernameIndex: uniqueIndex("username_idx").on(users.username),

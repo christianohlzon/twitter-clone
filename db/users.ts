@@ -6,8 +6,12 @@ export const getUserAndFeedByUsername = (username: string) => {
     with: {
       feedEntries: {
         with: {
-          post: true,
           user: true,
+          post: {
+            with: {
+              likes: true,
+            }
+          },
         },
       }
     },
