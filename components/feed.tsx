@@ -20,7 +20,7 @@ export const PostInteraction = ({
 }) => {
   return (
     <div className="text-sm text-zinc-500 mt-2 flex flex-row">
-      <button className="flex items-center ml-2 hover:text-sky-500">
+      <button className="flex items-center hover:text-sky-500">
         <MessageCircle size={16} />
         <span className="ml-1">{replies}</span>
       </button>
@@ -52,9 +52,13 @@ export const FeedPost = ({
       entryUser: null;
     }) => {
   return (
-    <div className="px-4 py-2 w-full border-b border-zinc-800">
+    <div className="px-4 py-2 w-full border-b border-zinc-800 relative">
+      <Link href={`/${post.author.username}/${post.id}`} className="w-full h-full absolute inset-0 z-10"></Link>
       {isRepost && (
-        <Link href={`/${entryUser.username}`} className="text-sm mb-1 ml-9 flex flex-row text-zinc-500 hover:underline font-semibold">
+        <Link
+          href={`/${entryUser.username}`}
+          className="text-sm mb-1 ml-9 flex flex-row text-zinc-500 hover:underline font-semibold z-20 relative"
+        >
           <Repeat2 size={16} className="my-auto" />
           <span className="ml-2">Retweeted by {entryUser.name}</span>
         </Link>
@@ -65,8 +69,10 @@ export const FeedPost = ({
         </div>
         <div className="pl-3">
           <div>
-            <Link href={`/${post.author.username}`}>
-              <span className="font-semibold hover:underline">{post.author.name}</span>
+            <Link href={`/${post.author.username}`} className="z-20 relative">
+              <span className="font-semibold hover:underline">
+                {post.author.name}
+              </span>
               <span className="ml-1 text-zinc-500">
                 @{post.author.username}
               </span>
@@ -79,7 +85,10 @@ export const FeedPost = ({
           {post.replyToPost && (
             <span className="text-zinc-500">
               Reply to{" "}
-              <Link href={`/${post.replyToPost.author.username}`} className="text-sky-500 hover:underline">
+              <Link
+                href={`/${post.replyToPost.author.username}`}
+                className="text-sky-500 hover:underline z-20 relative"
+              >
                 @{post.replyToPost.author.username}
               </Link>
             </span>
