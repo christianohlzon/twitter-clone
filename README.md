@@ -1,1 +1,1 @@
-# Twitter Clone made with Next.js server components, server actions, Tailwind, Drizzle ORM and Planetscale.
+# Twitter Clone made with Next.js server components, server actions, Tailwind, Drizzle ORM.
