@@ -1,6 +1,35 @@
 import { User } from "twitter/db/schema";
-import { getUserAndFeedByUsername } from "twitter/db/users";
+import { getUserByUsername } from "twitter/db/users";
 import { ProfileNavbar } from "twitter/components/profile-navbar";
+import { Calendar } from "lucide-react";
+
+const Profile = ({ user }: { user: User }) => {
+  return (
+    <div className="w-full border-b border-zinc-800">
+      <div className="w-full h-40 bg-zinc-700"></div>
+      <div className="relative">
+        <div className="h-32 w-32 rounded-full bg-zinc-700 absolute -top-16 ml-4 border-4 border-solid border-zinc-950"></div>
+        <button className="bg-sky-500 hover:opacity-70 transition py-2 px-8 font-semibold rounded-full absolute top-4 right-4">
+          Follow
+        </button>
+        <div className="p-4 pt-20">
+          <div className="flex flex-row justify-between">
+            <div>
+              <h1 className="font-semibold text-lg">{user.name}</h1>
+              <p className="text-zinc-500">@{user.username}</p>
+            </div>
+          </div>
+          <p className="mt-3">{user.bio}</p>
+          <div className="items-center flex flex-row space-x-1 text-zinc-500 mt-1">
+            <Calendar size={16} />
+            <span>Joined {user.createdAt?.toLocaleDateString()}</span>
+          </div>
+        </div>
+      </div>
+      <ProfileNavbar user={user} />
+    </div>
+  );
+};
 
 export default async function User({
   params,
@@ -9,7 +38,7 @@ export default async function User({
   params: { user: string };
   children: React.ReactNode;
 }) {
-  const user = await getUserAndFeedByUsername(params.user);
+  const user = await getUserByUsername(params.user);
 
   if (!user) {
     return <div>User not found</div>;
@@ -18,24 +47,7 @@ export default async function User({
   return (
     <div className="flex flex-row justify-center h-full">
       <div className="h-full w-128 border border-solid border-x-1 border-y-0 border-zinc-800">
-        <div className="w-full border-b border-zinc-800">
-          <div className="p-4">
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row">
-                <div className="w-12 h-12 bg-zinc-500 rounded-full"></div>
-                <div className="ml-2">
-                  <h1 className="font-semibold text-lg">{user.name}</h1>
-                  <p className="text-zinc-500">@{user.username}</p>
-                </div>
-              </div>
-              <button className="bg-sky-500 hover:opacity-70 transition py-2 px-8 font-semibold rounded-full my-auto">
-                Follow
-              </button>
-            </div>
-            <p className="mt-3">{user.bio}</p>
-          </div>
-          <ProfileNavbar user={user} />
-        </div>
+        <Profile user={user} />
         {children}
       </div>
     </div>
