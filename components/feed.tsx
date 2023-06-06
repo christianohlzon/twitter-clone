@@ -52,12 +52,12 @@ const FeedPost = ({
       entryUser: null;
     }) => {
   return (
-    <div className="p-4 w-full border-b border-zinc-800">
+    <div className="px-4 py-2 w-full border-b border-zinc-800">
       {isRepost && (
-        <div className="text-sm mb-2 flex flex-row text-zinc-400">
+        <Link href={`/${entryUser.username}`} className="text-sm mb-1 ml-9 flex flex-row text-zinc-500 hover:underline font-semibold">
           <Repeat2 size={16} className="my-auto" />
           <span className="ml-2">Retweeted by {entryUser.name}</span>
-        </div>
+        </Link>
       )}
       <div className="flex flex-row ">
         <div>

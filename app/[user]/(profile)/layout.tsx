@@ -31,7 +31,7 @@ const Profile = ({ user }: { user: User }) => {
   );
 };
 
-export default async function User({
+export default async function Layout({
   params,
   children,
 }: {
@@ -45,11 +45,9 @@ export default async function User({
   }
 
   return (
-    <div className="flex flex-row justify-center h-full">
-      <div className="h-full w-128 border border-solid border-x-1 border-y-0 border-zinc-800">
-        <Profile user={user} />
-        {children}
-      </div>
-    </div>
+    <>
+      <Profile user={user} />
+      {children}
+    </>
   );
 }
