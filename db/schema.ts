@@ -11,6 +11,11 @@ import {
 import { relations, InferModel } from "drizzle-orm";
 
 export type User = InferModel<typeof users>;
+export interface UserWithFollows extends User {
+  followers: Follow[];
+  followees: Follow[];
+};
+export type Follow = InferModel<typeof follows>;
 export type Post = InferModel<typeof posts>;
 export type PostWithAuthor = InferModel<typeof posts> & {
   author: User;
@@ -47,6 +52,20 @@ export const users = mysqlTable(
 export const usersRelations = relations(users, ({ many }) => ({
   feedEntries: many(feedEntries),
   likes: many(postLikes),
+  followers: many(follows, { relationName: "followees" }),
+  followees: many(follows, { relationName: "followers" }),
+}));
+
+export const follows = mysqlTable("follows", {
+  id: serial("id").primaryKey(),
+  followerId: int("follower_id").notNull(),
+  followeeId: int("followee_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const followsRelations = relations(follows, ({ one }) => ({
+  follower: one(users, { fields: [follows.followerId], references: [users.id], relationName: "followers" }),
+  followee: one(users, { fields: [follows.followeeId], references: [users.id], relationName: "followees" }),
 }));
 
 export const posts = mysqlTable("posts", {

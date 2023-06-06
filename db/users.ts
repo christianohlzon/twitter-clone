@@ -75,6 +75,10 @@ export const getUserAndLikesByUsername = (username: string) => {
 export const getUserByUsername = (username: string) => {
   return db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
+    with: {
+      followers: true,
+      followees: true,
+    }
   });
 };
 

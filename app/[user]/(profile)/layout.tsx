@@ -1,9 +1,9 @@
-import { User } from "twitter/db/schema";
+import { UserWithFollows } from "twitter/db/schema";
 import { getUserByUsername } from "twitter/db/users";
 import { ProfileNavbar } from "twitter/components/profile-navbar";
 import { Calendar } from "lucide-react";
 
-const Profile = ({ user }: { user: User }) => {
+const Profile = ({ user }: { user: UserWithFollows }) => {
   return (
     <div className="w-full border-b border-zinc-800">
       <div className="w-full h-40 bg-zinc-700"></div>
@@ -23,6 +23,20 @@ const Profile = ({ user }: { user: User }) => {
           <div className="items-center flex flex-row space-x-1 text-zinc-500 mt-1">
             <Calendar size={16} />
             <span>Joined {user.createdAt?.toLocaleDateString()}</span>
+          </div>
+          <div className="mt-2">
+            <span className="text-zinc-500">
+              <span className="font-bold text-zinc-50 mr-1">
+                {user.followers.length}
+              </span>
+              followers
+            </span>
+            <span className="text-zinc-500">
+              <span className="font-bold text-zinc-50 ml-2 mr-1">
+                {user.followees.length}
+              </span>
+              follows
+            </span>
           </div>
         </div>
       </div>
