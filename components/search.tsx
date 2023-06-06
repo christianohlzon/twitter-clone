@@ -35,12 +35,12 @@ export const Search = () => {
   }, [value]);
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <SearchIcon size={16} className="absolute top-3 left-4 text-zinc-400" />
       <input
         type="text"
-        className="bg-zinc-800 text-zinc-50 w-60 rounded-full pl-10 py-2 outline-none focus:outline-sky-500"
-        placeholder="Search"
+        className="bg-zinc-800 text-zinc-50 w-full rounded-full pl-10 py-2 outline-none focus:outline-sky-500"
+        placeholder="Search for user"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
