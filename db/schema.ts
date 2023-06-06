@@ -49,6 +49,14 @@ export const users = mysqlTable(
   })
 );
 
+export const userAuths = mysqlTable("user_auths", {
+  id: serial("id").primaryKey(),
+  userId: int("user_id").notNull(),
+  googleOAuthToken: varchar("google_oauth_token", { length: 255 }),
+  refreshToken: varchar("refresh_token", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   feedEntries: many(feedEntries),
   likes: many(postLikes),
