@@ -9,7 +9,7 @@ import {
   PostLikeWithPost,
 } from "twitter/db/schema";
 
-const PostInteraction = ({
+export const PostInteraction = ({
   likes,
   repost,
   replies,
@@ -36,7 +36,7 @@ const PostInteraction = ({
   );
 };
 
-const FeedPost = ({
+export const FeedPost = ({
   post,
   isRepost,
   entryUser,
@@ -66,7 +66,7 @@ const FeedPost = ({
         <div className="pl-3">
           <div>
             <Link href={`/${post.author.username}`}>
-              <span className="font-semibold">{post.author.name}</span>
+              <span className="font-semibold hover:underline">{post.author.name}</span>
               <span className="ml-1 text-zinc-500">
                 @{post.author.username}
               </span>

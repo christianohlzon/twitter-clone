@@ -1,3 +1,7 @@
+"use server"
+
+import { like } from "drizzle-orm";
+
 import { db } from "./index";
 
 export const getUserAndPostsByUsername = (username: string) => {
@@ -40,7 +44,7 @@ export const getUserAndRepliesByUsername = (username: string) => {
                 with: {
                   author: true,
                 },
-              }
+              },
             },
           },
         },
@@ -71,5 +75,11 @@ export const getUserAndLikesByUsername = (username: string) => {
 export const getUserByUsername = (username: string) => {
   return db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
+  });
+};
+
+export const searchUsersByUsername = (searchInput: string) => {
+  return db.query.users.findMany({
+    where: (users) => like(users.username, `%${searchInput.toLowerCase()}%`),
   });
 };
