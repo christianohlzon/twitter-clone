@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { getPostById } from "twitter/db/posts";
-import { PostInteraction } from "twitter/components/feed";
+import { PostInteraction } from "twitter/components/post";
 import { PostWithRelations } from "twitter/db/schema";
 import { timeSince } from "twitter/utils/time";
 
@@ -36,9 +36,10 @@ const PostUI = ({ post }: { post: PostWithRelations }) => {
           </span>
         </div>        
         <PostInteraction
-          likes={post.likes.length}
+          likes={post.likes}
           repost={0}
           replies={post.replies.length}
+          currentUser={{id:1}}
         />
       </div>
     </div>

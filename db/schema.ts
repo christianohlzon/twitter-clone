@@ -24,7 +24,7 @@ export interface PostWithRelations extends InferModel<typeof posts> {
   author: User;
   likes: PostLike[];
   replies: Post[];
-  replyToPost?: PostWithAuthor;
+  replyToPost?: PostWithAuthor | null;
 }
 export type PostLike = InferModel<typeof postLikes>;
 export interface PostLikeWithPost extends InferModel<typeof postLikes> {
@@ -49,6 +49,13 @@ export const users = mysqlTable(
   })
 );
 
+export const usersRelations = relations(users, ({ many }) => ({
+  feedEntries: many(feedEntries),
+  likes: many(postLikes),
+  followers: many(follows, { relationName: "followees" }),
+  followees: many(follows, { relationName: "followers" }),
+}));
+
 export const userAuths = mysqlTable("user_auths", {
   id: serial("id").primaryKey(),
   userId: int("user_id").notNull(),
@@ -57,12 +64,6 @@ export const userAuths = mysqlTable("user_auths", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  feedEntries: many(feedEntries),
-  likes: many(postLikes),
-  followers: many(follows, { relationName: "followees" }),
-  followees: many(follows, { relationName: "followers" }),
-}));
 
 export const follows = mysqlTable("follows", {
   id: serial("id").primaryKey(),

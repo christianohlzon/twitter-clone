@@ -1,4 +1,12 @@
-const { OAuth2Client } = require("google-auth-library");
+import { JWT, OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
+
+export interface JWTUser {
+  id: number;
+  username: string;
+}
+
+const jwtSecret = process.env.JWT_SECRET as string;
 
 export const getGoogleAuthUrl = () => {
   const oAuth2Client = new OAuth2Client(
@@ -11,4 +19,25 @@ export const getGoogleAuthUrl = () => {
   });
 
   return authorizeUrl;
+};
+
+export const createJWT = ({
+  username,
+  id,
+}: {
+  username: string;
+  id: number;
+}) => {
+  const token = jwt.sign({ id, username }, jwtSecret, {
+    expiresIn: "10m",
+  });
+  return token;
+};
+
+
+export const verifyJWT = async (token?: string) => {
+  if (!token) throw new Error("No JWT provided");   
+
+  const jwtUser = jwt.verify(token, jwtSecret);
+  return jwtUser as JWTUser;
 };
