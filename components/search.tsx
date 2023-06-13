@@ -12,6 +12,7 @@ let timeout: undefined | ReturnType<typeof setTimeout>;
 export const Search = () => {
   const [value, setValue] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const clearSearch = () => {
     setValue("");
@@ -22,8 +23,10 @@ export const Search = () => {
     const handleSearch = async () => {
       const users = await searchUsersByUsername(value);
       setUsers(users);
+      setIsLoading(false);
     };
 
+    setIsLoading(true);
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       if (value === "") {
@@ -44,17 +47,30 @@ export const Search = () => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      {users.length > 0 && (
+      {value.length > 0 && (
         <div className="absolute top-12 left-0 w-full bg-zinc-950 rounded-lg shadow-lg border  border-zinc-700 divide-y divide-zinc-700">
-          {users.map((user) => (
-            <Link href={`/${user.username}`} key={user.id} className="flex flex-row items-center p-2" onClick={clearSearch}>
-              <div className="w-10 h-10 rounded-full bg-zinc-800"></div>
-              <div className="ml-2">
-                <div className="">{user.name}</div>
-                <div className="text-sm font-bold text-zinc-400">@{user.username}</div>
-              </div>
-            </Link>
-          ))}
+          {users.length ? (
+            users.map((user) => (
+              <Link
+                href={`/${user.username}`}
+                key={user.id}
+                className="flex flex-row items-center p-2"
+                onClick={clearSearch}
+              >
+                <div className="w-10 h-10 rounded-full bg-zinc-800"></div>
+                <div className="ml-2">
+                  <div className="">{user.name}</div>
+                  <div className="text-sm font-bold text-zinc-400">
+                    @{user.username}
+                  </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className="p-2">
+              {isLoading ? "Loading..." : "No users found."}
+            </p>
+          )}
         </div>
       )}
     </div>

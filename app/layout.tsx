@@ -1,7 +1,10 @@
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
+import { JWTUser, verifyJWT } from "twitter/utils/auth";
 import { Search } from "twitter/components/search";
+import { Sidebar } from "twitter/components/sidebar";
 import { GoogleIcon } from "twitter/components/google-icon";
 import "./globals.css";
 
@@ -29,18 +32,25 @@ export const metadata = {
     "Made with Next.js, Server Components, Server Actions, and Drizzle.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let jwtUser: JWTUser | null;
+  try {
+    const jwtToken = cookies().get("jwt")?.value;
+    jwtUser = await verifyJWT(jwtToken);
+  } catch (e) {
+    jwtUser = null;
+  }
   return (
     <html lang="en">
       <body className={"font-sans bg-zinc-950 text-zinc-50 h-full"}>
         <div className="flex flex-row justify-center min-h-full">
           <div className=" w-60 mr-4 mt-4">
-            <div className="fixed">
-              <SignUpBox />
+            <div className="sticky top-0">
+              {jwtUser ? <Sidebar jwtUser={jwtUser} /> : <SignUpBox />}
             </div>
           </div>
           <div className=" min-h-screen w-128 border border-solid border-x-1 border-y-0 border-zinc-800">

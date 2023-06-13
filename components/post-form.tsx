@@ -20,6 +20,7 @@ export const PostForm = () => {
           onChange={(e) => setText(e.target.value)}
           value={text}
           className={textAreaClassName}
+          rows={3}
         />
         <div className="w-full flex flex-row justify-end mt-2 pb-1">
           <div>
