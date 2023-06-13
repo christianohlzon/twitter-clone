@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 import { verifyJWT } from "twitter/utils/auth";
-import { FeedEntry, PostLikeWithPost } from "twitter/db/schema";
+import { FeedEntry, PostLikeWithPost, PostWithRelations } from "twitter/db/schema";
 import { FeedPost } from "twitter/components/post";
 
 const getUserFromCookie = async () => {
@@ -36,6 +36,24 @@ export const LikeFeed = async ({ likes }: { likes: PostLikeWithPost[] }) => {
         <FeedPost
           key={like.id}
           post={like.post}
+          isRepost={false}
+          entryUser={null}
+          currentUser={currentUserId}
+        />
+      ))}
+    </div>
+  );
+};
+
+
+export const ExploreFeed = async ({ posts }: { posts: PostWithRelations[] }) => {
+  const currentUserId = await getUserFromCookie()
+  return (
+    <div>
+      {posts.map((post) => (
+        <FeedPost
+          key={post.id}
+          post={post}
           isRepost={false}
           entryUser={null}
           currentUser={currentUserId}

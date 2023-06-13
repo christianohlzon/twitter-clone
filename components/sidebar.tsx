@@ -30,8 +30,8 @@ export const Sidebar = ({ jwtUser }: { jwtUser: JWTUser }) => {
     {
       name: "Explore",
       icon: Compass,
-      href: "/explore",
-      isActive: pathname.endsWith("/explore"),
+      href: "/explore/today",
+      isActive: pathname.includes("/explore/"),
     },
   ];
   return (
@@ -47,7 +47,7 @@ export const Sidebar = ({ jwtUser }: { jwtUser: JWTUser }) => {
               <li key={item.href} className="mb-5">
                 <Link
                   href={item.href}
-                  className={`flex flex-row items-center text-lg font-semibold hover:text-sky-500 ${
+                  className={`flex flex-row items-center  hover:text-sky-500 ${
                     item.isActive ? "text-sky-500" : "text-zinc-50"
                   }`}
                 >

@@ -67,7 +67,7 @@ export const Search = () => {
               </Link>
             ))
           ) : (
-            <p className="p-2">
+            <p className="p-3 text-center text-zinc-400">
               {isLoading ? "Loading..." : "No users found."}
             </p>
           )}
