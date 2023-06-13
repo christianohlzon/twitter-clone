@@ -1,9 +1,8 @@
-
 export const timeSince = (date: Date) => {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = seconds / 31536000;
   if (interval > 1) {
-    return date.toLocaleDateString();
+    return date.toLocaleDateString("en-US");
   }
   interval = seconds / 2592000;
   if (interval > 1) {
@@ -22,4 +21,4 @@ export const timeSince = (date: Date) => {
     return `${Math.floor(interval)} minutes`;
   }
   return `${Math.floor(seconds)} seconds`;
-}
+};

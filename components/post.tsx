@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 
@@ -7,23 +8,40 @@ import { PostWithRelations, User, PostLike } from "twitter/db/schema";
 import { timeSince } from "twitter/utils/time";
 import { JWTUser } from "twitter/utils/auth";
 import { likePost } from "twitter/actions/post-likes";
+import {
+  likePostWithUserId,
+  unlikePostWithUserId,
+} from "twitter/db/post-likes";
 
-export const PostInteraction = async ({
+export const PostInteraction = ({
   likes,
   repost,
   replies,
   currentUser,
-  postId
+  postId,
 }: {
   likes: PostLike[];
   repost: number;
   replies: number;
   currentUser: JWTUser;
-  postId: number
+  postId: number;
 }) => {
   const isLikedByUser = likes.some((like) => (like.userId = currentUser.id));
+
+  const [isLiked, setIsLiked] = useState(isLikedByUser);
+  const heartAction = () => {
+    if (isLiked) {
+      setIsLiked(false);
+      unlikePostWithUserId({ userId: currentUser.id, postId });
+    } else {
+      setIsLiked(true);
+      likePostWithUserId({ userId: currentUser.id, postId });
+    }
+  };
+
+  const likeCountAdjustment = isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0
   return (
-    <div className="text-sm text-zinc-500 mt-2 flex flex-row">
+    <form className="text-sm text-zinc-500 mt-2 flex flex-row">
       <button className="flex items-center hover:text-sky-500 relative z-20">
         <MessageCircle size={16} />
         <span className="ml-1">{replies}</span>
@@ -32,15 +50,17 @@ export const PostInteraction = async ({
         <Repeat2 size={16} />
         <span className="ml-1">{repost}</span>
       </button> */}
-      <button className="flex items-center ml-4 hover:text-rose-500 relative z-20">
+      <button
+        className="flex items-center ml-4 hover:text-rose-500 relative z-20"
+        formAction={heartAction}
+      >
         <Heart
           size={16}
-          className={`${isLikedByUser ? "text-rose-500 fill-rose-500" : ""}`}
-          onClick={() => likePost(postId)}
+          className={`${isLiked ? "text-rose-500 fill-rose-500" : ""}`}
         />
-        <span className="ml-1">{likes.length}</span>
+        <span className="ml-1">{likes.length + likeCountAdjustment}</span>
       </button>
-    </div>
+    </form>
   );
 };
 
