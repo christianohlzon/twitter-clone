@@ -1,4 +1,4 @@
-import { getGoogleAuthUrl } from "twitter/utils/auth";
+import { getGoogleAuthUrl } from "twitter/actions/auth";
 import { redirect } from "next/navigation";
 
 export async function GET() {

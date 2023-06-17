@@ -18,7 +18,7 @@
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "google-auth-library": "^8.8.0",
-    "jsonwebtoken": "^9.0.0",
+    "jose": "^4.14.4",
     "lucide-react": "^0.236.0",
     "mysql2": "^3.3.3",
     "next": "13.4.4",

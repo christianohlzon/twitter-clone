@@ -2,7 +2,8 @@ import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-import { JWTUser, verifyJWT } from "twitter/utils/auth";
+import { getSignedInUser } from "twitter/actions/auth";
+import { JWTUser } from "twitter/utils/middleware-auth"
 import { Search } from "twitter/components/search";
 import { Sidebar } from "twitter/components/sidebar";
 import { GoogleIcon } from "twitter/components/google-icon";
@@ -39,8 +40,7 @@ export default async function RootLayout({
 }) {
   let jwtUser: JWTUser | null;
   try {
-    const jwtToken = cookies().get("jwt")?.value;
-    jwtUser = await verifyJWT(jwtToken);
+    jwtUser = await getSignedInUser();
   } catch (e) {
     jwtUser = null;
   }
