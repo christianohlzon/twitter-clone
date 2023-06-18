@@ -1,4 +1,4 @@
-import { inArray, gt, and, eq, sql } from "drizzle-orm";
+import { inArray, gt, and, eq, or } from "drizzle-orm";
 
 import { db } from "./index";
 import { feedEntries, posts } from "./schema";
@@ -25,7 +25,10 @@ export const getFollowingFeedByUserId = async (userId: number) => {
   if (!followeeIds.length) return [];
 
   return db.query.feedEntries.findMany({
-    where: inArray(feedEntries.userId, followeeIds),
+    where: or(
+      inArray(feedEntries.userId, followeeIds),
+      eq(feedEntries.userId, userId)
+    ),
     orderBy: (feedEntries, { desc }) => [desc(feedEntries.createdAt)],
     with: {
       post: {
@@ -58,5 +61,18 @@ export const getExploreFeed = async (sinceDateTime: Date) => {
         },
       },
     },
+  });
+};
+
+export const createFeedEntry = async ({
+  userId,
+  postId,
+}: {
+  userId: number;
+  postId: number;
+}) => {
+  return db.insert(feedEntries).values({
+    userId,
+    postId,
   });
 };

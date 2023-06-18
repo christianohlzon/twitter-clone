@@ -1,18 +1,13 @@
-import { cookies } from "next/headers";
-
-import { verifyJWT } from "twitter/utils/auth";
-import { FeedEntry, PostLikeWithPost, PostWithRelations } from "twitter/db/schema";
+import { getSignedInUser } from "twitter/actions/auth";
+import {
+  FeedEntry,
+  PostLikeWithPost,
+  PostWithRelations,
+} from "twitter/db/schema";
 import { FeedPost } from "twitter/components/post";
 
-const getUserFromCookie = async () => {
-  const jwtToken = cookies().get("jwt")?.value;
-  const jwtUser = await verifyJWT(jwtToken);
-  return jwtUser
-}
-
-
 export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
-  const currentUserId = await getUserFromCookie()
+  const currentUser = await getSignedInUser();
   return (
     <div>
       {feedEntries.map((entry) => (
@@ -21,7 +16,7 @@ export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
           post={entry.post}
           isRepost={!!entry.isRepost}
           entryUser={entry.user}
-          currentUser={currentUserId}
+          currentUser={currentUser}
         />
       ))}
     </div>
@@ -29,7 +24,7 @@ export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
 };
 
 export const LikeFeed = async ({ likes }: { likes: PostLikeWithPost[] }) => {
-  const currentUserId = await getUserFromCookie()
+  const currentUser = await getSignedInUser();
   return (
     <div>
       {likes.map((like) => (
@@ -38,16 +33,19 @@ export const LikeFeed = async ({ likes }: { likes: PostLikeWithPost[] }) => {
           post={like.post}
           isRepost={false}
           entryUser={null}
-          currentUser={currentUserId}
+          currentUser={currentUser}
         />
       ))}
     </div>
   );
 };
 
-
-export const ExploreFeed = async ({ posts }: { posts: PostWithRelations[] }) => {
-  const currentUserId = await getUserFromCookie()
+export const ExploreFeed = async ({
+  posts,
+}: {
+  posts: PostWithRelations[];
+}) => {
+  const currentUser = await getSignedInUser();
   return (
     <div>
       {posts.map((post) => (
@@ -56,7 +54,7 @@ export const ExploreFeed = async ({ posts }: { posts: PostWithRelations[] }) => 
           post={post}
           isRepost={false}
           entryUser={null}
-          currentUser={currentUserId}
+          currentUser={currentUser}
         />
       ))}
     </div>

@@ -8,6 +8,7 @@ import { PostWithRelations, User, PostLike } from "twitter/db/schema";
 import { timeSince } from "twitter/utils/time";
 import { DecodedJWT } from "twitter/utils/middleware-auth";
 import { likePost, unlikePost } from "twitter/actions/post-likes";
+import { ProfileAvatar } from "./profile-avatar";
 
 export const PostInteraction = ({
   likes,
@@ -97,8 +98,8 @@ export const FeedPost = ({
         </Link>
       )}
       <div className="flex flex-row ">
-        <div>
-          <div className="w-12 h-12 bg-zinc-500 rounded-full mt-1"></div>
+        <div className="pt-2">
+          <ProfileAvatar size={48} />
         </div>
         <div className="pl-3">
           <div>
