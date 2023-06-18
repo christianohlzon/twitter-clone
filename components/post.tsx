@@ -1,17 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
 
 import { PostWithRelations, User, PostLike } from "twitter/db/schema";
 import { timeSince } from "twitter/utils/time";
-import { JWTUser } from "twitter/utils/auth";
-import { likePost } from "twitter/actions/post-likes";
-import {
-  likePostWithUserId,
-  unlikePostWithUserId,
-} from "twitter/db/post-likes";
+import { DecodedJWT } from "twitter/utils/middleware-auth";
+import { likePost, unlikePost } from "twitter/actions/post-likes";
 
 export const PostInteraction = ({
   likes,
@@ -23,23 +19,26 @@ export const PostInteraction = ({
   likes: PostLike[];
   repost: number;
   replies: number;
-  currentUser: JWTUser;
+  currentUser: DecodedJWT;
   postId: number;
 }) => {
-  const isLikedByUser = likes.some((like) => (like.userId = currentUser.id));
+  console.log(likes);
+  console.log(currentUser);
+  const isLikedByUser = likes.some((like) => (like.userId === currentUser.id));
 
   const [isLiked, setIsLiked] = useState(isLikedByUser);
   const heartAction = () => {
     if (isLiked) {
       setIsLiked(false);
-      unlikePostWithUserId({ userId: currentUser.id, postId });
+      unlikePost(postId);
     } else {
       setIsLiked(true);
-      likePostWithUserId({ userId: currentUser.id, postId });
+      likePost(postId);
     }
   };
 
-  const likeCountAdjustment = isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0
+  const likeCountAdjustment =
+    isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0;
   return (
     <form className="text-sm text-zinc-500 mt-2 flex flex-row">
       <button className="flex items-center hover:text-sky-500 relative z-20">
@@ -74,13 +73,13 @@ export const FeedPost = ({
       post: PostWithRelations;
       isRepost: boolean;
       entryUser: User;
-      currentUser: JWTUser;
+      currentUser: DecodedJWT;
     }
   | {
       post: PostWithRelations;
       isRepost: false;
       entryUser: null;
-      currentUser: JWTUser;
+      currentUser: DecodedJWT;
     }) => {
   return (
     <div className="px-4 py-2 w-full border-b border-zinc-800 relative">

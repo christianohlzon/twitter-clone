@@ -1,18 +1,14 @@
 "use server";
 
-import { cookies } from "next/headers";
-
-import { verifyJWT } from "twitter/utils/auth";
-import { likePostWithUserId } from "twitter/db/post-likes";
+import { getSignedInUser } from "twitter/actions/auth";
+import { likePostWithUserId, unlikePostWithUserId } from "twitter/db/post-likes";
 
 export const likePost = async (postId: number) => {
-  const jwtToken = cookies().get("jwt")?.value;
-  const jwtUser = await verifyJWT(jwtToken);
-  likePostWithUserId({ userId: jwtUser.id, postId });
+  const decodedToken = await getSignedInUser();
+  likePostWithUserId({ userId: decodedToken.id, postId });
 };
 
 export const unlikePost = async (postId: number) => {
-  const jwtToken = cookies().get("jwt")?.value;
-  const jwtUser = await verifyJWT(jwtToken);
-  likePostWithUserId({ userId: jwtUser.id, postId });
+  const decodedToken = await getSignedInUser();
+  unlikePostWithUserId({ userId: decodedToken.id, postId });
 };

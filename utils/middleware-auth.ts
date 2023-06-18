@@ -3,11 +3,6 @@ import * as jose from "jose";
 
 import { getUserAuthByRefreshToken } from "twitter/db/user-auths";
 
-export interface JWTUser {
-  id: number;
-  username: string;
-}
-
 export interface DecodedRefreshToken {
   id: number;
   username: string;
