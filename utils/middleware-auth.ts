@@ -1,6 +1,8 @@
 import type { NextRequest, NextResponse } from "next/server";
 import * as jose from "jose";
 
+import { getUserAuthByRefreshToken } from "twitter/db/user-auths";
+
 export interface JWTUser {
   id: number;
   username: string;
@@ -58,9 +60,10 @@ export const verifyRefreshToken = async (request: NextRequest) => {
   const refreshToken = request.cookies.get("refreshToken")?.value;
   if (!refreshToken) throw new Error("No refreshToken provided");
 
-  const { payload } = await jose.jwtVerify(refreshToken, jwtSecret);
+  const userAuth = await getUserAuthByRefreshToken(refreshToken);
+  if (!userAuth) throw new Error("Invalid refreshToken provided");
 
-  return payload as unknown as DecodedRefreshToken;
+  return userAuth
 };
 
 export const refreshJWTWithRefreshToken = async ({
@@ -74,10 +77,10 @@ export const refreshJWTWithRefreshToken = async ({
     await verifyJWT(request);
   } catch (e) {
     try {
-      const decodedRefreshToken = await verifyRefreshToken(request);
+      const userAuth = await verifyRefreshToken(request);
       await createAndSetJWTCookie({
-        id: decodedRefreshToken.id,
-        username: decodedRefreshToken.username,
+        id: userAuth.user.id,
+        username: userAuth.user.username,
         response,
       });
     } catch (e) {

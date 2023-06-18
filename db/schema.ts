@@ -64,6 +64,9 @@ export const userAuths = mysqlTable("user_auths", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const userAuthsRelations = relations(userAuths, ({ one }) => ({
+  user: one(users, { fields: [userAuths.userId], references: [users.id] }),
+}));
 
 export const follows = mysqlTable("follows", {
   id: serial("id").primaryKey(),
