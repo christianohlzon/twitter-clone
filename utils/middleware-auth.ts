@@ -21,8 +21,6 @@ const alg = "HS256";
 const jwtEnvSecret = process.env.JWT_SECRET as string;
 const jwtSecret = new TextEncoder().encode(jwtEnvSecret);
 
-
-
 export const createAndSetJWTCookie = async ({
   id,
   username,
@@ -44,6 +42,7 @@ export const createAndSetJWTCookie = async ({
     sameSite: "strict",
     secure: true,
     maxAge: 60 * 10,
+    path: "/",
   });
 };
 

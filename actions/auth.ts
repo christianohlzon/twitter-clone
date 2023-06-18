@@ -1,6 +1,6 @@
 "use server";
-
-import { cookies } from "next/headers";
+ 
+import { cookies, headers } from "next/headers";
 import * as jose from "jose";
 import { DecodedJWT } from "twitter/utils/middleware-auth";
 import { OAuth2Client } from "google-auth-library";
@@ -11,20 +11,14 @@ const jwtSecret = new TextEncoder().encode(jwtEnvSecret);
 
 export const getSignedInUser = async () => {
   try {
-    const token = cookies().get("jwt")?.value;
+    const setCookieJWTHeader = headers().get("set-cookie")?.split(';')[0].replace('jwt=', '')
+    const token = cookies().get("jwt")?.value || setCookieJWTHeader
     if (!token) throw new Error("No JWT provided");
 
     const { payload } = await jose.jwtVerify(token, jwtSecret);
     return payload as unknown as DecodedJWT;
-  } catch (e) {
-    const token = cookies().get("refreshToken")?.value;
-    if (!token) throw new Error("No JWT provided");
-
-    const { payload } = await jose.jwtVerify(token, jwtSecret);
-    return {
-      id: payload.id,
-      username: payload.username,
-    } as unknown as DecodedJWT;
+  } catch (e) { 
+    throw new Error("Invalid JWT");
   }
 };
 
