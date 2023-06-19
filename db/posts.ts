@@ -12,6 +12,18 @@ export const getPostById = async (id: number) => {
   });
 };
 
+export const getRepliesToPostId = async (id: number) => {
+  return db.query.posts.findMany({
+    where: (posts, { eq }) => eq(posts.replyToPostId, id),
+    with: {
+      author: true,
+      likes: true,
+      replies: true,
+    },
+    orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+  });
+};
+
 export const createPost = async ({
   text,
   userId,
