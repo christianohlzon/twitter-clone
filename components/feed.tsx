@@ -1,4 +1,4 @@
-import { getSignedInUser } from "twitter/actions/auth";
+import { getSignedInUserOrUndefined } from "twitter/actions/auth";
 import {
   FeedEntry,
   PostLikeWithPost,
@@ -7,7 +7,7 @@ import {
 import { FeedPost } from "twitter/components/post";
 
 export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
-  const currentUser = await getSignedInUser();
+  const currentUser = await getSignedInUserOrUndefined();
   return (
     <div>
       {feedEntries.map((entry) => (
@@ -24,7 +24,7 @@ export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
 };
 
 export const LikeFeed = async ({ likes }: { likes: PostLikeWithPost[] }) => {
-  const currentUser = await getSignedInUser();
+  const currentUser = await getSignedInUserOrUndefined();
   return (
     <div>
       {likes.map((like) => (
@@ -45,7 +45,7 @@ export const ExploreFeed = async ({
 }: {
   posts: PostWithRelations[];
 }) => {
-  const currentUser = await getSignedInUser();
+  const currentUser = await getSignedInUserOrUndefined();
   return (
     <div>
       {posts.map((post) => (

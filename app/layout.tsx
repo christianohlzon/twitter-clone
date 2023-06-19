@@ -1,8 +1,7 @@
 import { Inter } from "next/font/google";
 import Link from "next/link";
 
-import { getSignedInUser } from "twitter/actions/auth";
-import { DecodedJWT } from "twitter/utils/middleware-auth"
+import { getSignedInUserOrUndefined } from "twitter/actions/auth";
 import { Search } from "twitter/components/search";
 import { Sidebar } from "twitter/components/sidebar";
 import { GoogleIcon } from "twitter/components/google-icon";
@@ -13,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 const SignUpBox = () => {
   return (
     <>
-      <h2 className="font-semibold mb-3 text-lg">Sign in or create account</h2>
+      <h2 className="font-semibold mb-3 pt-3 text-lg">Sign in or create account</h2>
       <Link
         href="/sign-in"
         className="bg-zinc-50 w-full text-zinc-950 px-5 py-2 rounded-full items-center flex flex-row"
@@ -37,12 +36,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let user: DecodedJWT | null;
-  try {
-    user = await getSignedInUser();
-  } catch (e) {
-    user = null;
-  }
+  const user = await getSignedInUserOrUndefined();
   return (
     <html lang="en">
       <body className={"font-sans bg-zinc-950 text-zinc-50 h-full"}>

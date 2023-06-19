@@ -1,5 +1,5 @@
 "use server";
- 
+
 import { cookies, headers } from "next/headers";
 import * as jose from "jose";
 import { DecodedJWT } from "twitter/utils/middleware-auth";
@@ -11,14 +11,33 @@ const jwtSecret = new TextEncoder().encode(jwtEnvSecret);
 
 export const getSignedInUser = async () => {
   try {
-    const setCookieJWTHeader = headers().get("set-cookie")?.split(';')[0].replace('jwt=', '')
-    const token = cookies().get("jwt")?.value || setCookieJWTHeader
+    const setCookieJWTHeader = headers()
+      .get("set-cookie")
+      ?.split(";")[0]
+      .replace("jwt=", "");
+    const token = cookies().get("jwt")?.value || setCookieJWTHeader;
     if (!token) throw new Error("No JWT provided");
 
     const { payload } = await jose.jwtVerify(token, jwtSecret);
     return payload as unknown as DecodedJWT;
-  } catch (e) { 
+  } catch (e) {
     throw new Error("Invalid JWT");
+  }
+};
+
+export const getSignedInUserOrUndefined = async () => {
+  try {
+    const setCookieJWTHeader = headers()
+      .get("set-cookie")
+      ?.split(";")[0]
+      .replace("jwt=", "");
+    const token = cookies().get("jwt")?.value || setCookieJWTHeader;
+    if (!token) throw new Error("No JWT provided");
+
+    const { payload } = await jose.jwtVerify(token, jwtSecret);
+    return payload as unknown as DecodedJWT;
+  } catch (e) {
+    return undefined;
   }
 };
 

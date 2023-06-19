@@ -5,7 +5,7 @@ import { like } from "drizzle-orm";
 import { db } from "./index";
 
 export const getUserAndPostsByUsername = async (username: string) => {
-  return db.query.users.findFirst({
+  return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
       feedEntries: {
@@ -27,7 +27,7 @@ export const getUserAndPostsByUsername = async (username: string) => {
 };
 
 export const getUserAndRepliesByUsername = async (username: string) => {
-  return db.query.users.findFirst({
+  return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
       feedEntries: {
@@ -54,7 +54,7 @@ export const getUserAndRepliesByUsername = async (username: string) => {
 };
 
 export const getUserAndLikesByUsername = async (username: string) => {
-  return db.query.users.findFirst({
+  return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
       likes: {
@@ -72,8 +72,8 @@ export const getUserAndLikesByUsername = async (username: string) => {
   });
 };
 
-export const getUserByUsername = (username: string) => {
-  return db.query.users.findFirst({
+export const getUserByUsername = async (username: string) => {
+  return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
       followers: true,
@@ -82,8 +82,8 @@ export const getUserByUsername = (username: string) => {
   });
 };
 
-export const searchUsersByUsername = (searchInput: string) => {
-  return db.query.users.findMany({
+export const searchUsersByUsername = async (searchInput: string) => {
+  return await db.query.users.findMany({
     where: (users) => like(users.username, `%${searchInput.toLowerCase()}%`),
   });
 };
