@@ -23,8 +23,6 @@ export const PostInteraction = ({
   currentUser: DecodedJWT;
   postId: number;
 }) => {
-  console.log(likes);
-  console.log(currentUser);
   const isLikedByUser = likes.some((like) => (like.userId === currentUser.id));
 
   const [isLiked, setIsLiked] = useState(isLikedByUser);
