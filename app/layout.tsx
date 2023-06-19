@@ -1,9 +1,8 @@
 import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
 import Link from "next/link";
 
 import { getSignedInUser } from "twitter/actions/auth";
-import { JWTUser } from "twitter/utils/middleware-auth"
+import { DecodedJWT } from "twitter/utils/middleware-auth"
 import { Search } from "twitter/components/search";
 import { Sidebar } from "twitter/components/sidebar";
 import { GoogleIcon } from "twitter/components/google-icon";
@@ -38,11 +37,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let jwtUser: JWTUser | null;
+  let user: DecodedJWT | null;
   try {
-    jwtUser = await getSignedInUser();
+    user = await getSignedInUser();
   } catch (e) {
-    jwtUser = null;
+    user = null;
   }
   return (
     <html lang="en">
@@ -50,7 +49,7 @@ export default async function RootLayout({
         <div className="flex flex-row justify-center min-h-full">
           <div className=" w-60 mr-4 mt-4">
             <div className="sticky top-0">
-              {jwtUser ? <Sidebar jwtUser={jwtUser} /> : <SignUpBox />}
+              {user ? <Sidebar user={user} /> : <SignUpBox />}
             </div>
           </div>
           <div className=" min-h-screen w-128 border border-solid border-x-1 border-y-0 border-zinc-800">

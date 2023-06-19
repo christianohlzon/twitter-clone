@@ -1,10 +1,10 @@
-"use server"
+"use server";
 
 import { like } from "drizzle-orm";
 
 import { db } from "./index";
 
-export const getUserAndPostsByUsername = (username: string) => {
+export const getUserAndPostsByUsername = async (username: string) => {
   return db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
@@ -26,7 +26,7 @@ export const getUserAndPostsByUsername = (username: string) => {
   });
 };
 
-export const getUserAndRepliesByUsername = (username: string) => {
+export const getUserAndRepliesByUsername = async (username: string) => {
   return db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
@@ -53,7 +53,7 @@ export const getUserAndRepliesByUsername = (username: string) => {
   });
 };
 
-export const getUserAndLikesByUsername = (username: string) => {
+export const getUserAndLikesByUsername = async (username: string) => {
   return db.query.users.findFirst({
     where: (users, { eq }) => eq(users.username, username),
     with: {
@@ -78,7 +78,7 @@ export const getUserByUsername = (username: string) => {
     with: {
       followers: true,
       followees: true,
-    }
+    },
   });
 };
 

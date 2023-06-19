@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, Bird, Compass, Home, User } from "lucide-react";
 
-import { JWTUser } from "twitter/utils/auth";
+import { DecodedJWT } from "twitter/utils/middleware-auth";
 
-export const Sidebar = ({ jwtUser }: { jwtUser: JWTUser }) => {
+export const Sidebar = ({ user }: { user: DecodedJWT }) => {
   const pathname = usePathname();
   const navItems = [
     {
@@ -18,8 +18,8 @@ export const Sidebar = ({ jwtUser }: { jwtUser: JWTUser }) => {
     {
       name: "Profile",
       icon: User,
-      href: `/${jwtUser.username}`,
-      isActive: pathname.endsWith(`/${jwtUser.username}`),
+      href: `/${user.username}`,
+      isActive: pathname.startsWith(`/${user.username}`),
     },
     {
       name: "Notifications",
@@ -31,7 +31,7 @@ export const Sidebar = ({ jwtUser }: { jwtUser: JWTUser }) => {
       name: "Explore",
       icon: Compass,
       href: "/explore/today",
-      isActive: pathname.includes("/explore/"),
+      isActive: pathname.startsWith("/explore/"),
     },
   ];
   return (

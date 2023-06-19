@@ -22,3 +22,7 @@ export const timeSince = (date: Date) => {
   }
   return `${Math.floor(seconds)} seconds`;
 };
+
+export function wait(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
