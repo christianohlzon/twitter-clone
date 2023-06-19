@@ -15,12 +15,15 @@ export const getPostById = async (id: number) => {
 export const createPost = async ({
   text,
   userId,
+  replyToPostId,
 }: {
   text: string;
   userId: number;
+  replyToPostId?: number;
 }) => {
   return db.insert(posts).values({
     authorId: userId,
     content: text,
+    replyToPostId,
   });
 };

@@ -16,12 +16,14 @@ export const PostInteraction = ({
   replies,
   currentUser,
   postId,
+  postAuthor,
 }: {
   likes: PostLike[];
   repost: number;
   replies: number;
   currentUser?: DecodedJWT;
   postId: number;
+  postAuthor: User;
 }) => {
   const isLikedByUser =
     !currentUser || likes.some((like) => like.userId === currentUser.id);
@@ -41,10 +43,10 @@ export const PostInteraction = ({
     isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0;
   return (
     <form className="text-sm text-zinc-500 mt-2 flex flex-row">
-      <button className="flex items-center hover:text-sky-500 relative z-20">
+      <Link href={`/${postAuthor.username}/${postId}/reply`} className="flex items-center hover:text-sky-500 relative z-20">
         <MessageCircle size={16} />
         <span className="ml-1">{replies}</span>
-      </button>
+      </Link>
       {/* <button className="flex items-center ml-4">
         <Repeat2 size={16} />
         <span className="ml-1">{repost}</span>
@@ -133,6 +135,7 @@ export const FeedPost = ({
             replies={post.replies.length}
             currentUser={currentUser}
             postId={post.id}
+            postAuthor={post.author}
           />
         </div>
       </div>
@@ -174,6 +177,7 @@ export const Post = ({
         </div>
         <PostInteraction
           postId={post.id}
+          postAuthor={post.author}
           likes={post.likes}
           repost={0}
           replies={post.replies.length}

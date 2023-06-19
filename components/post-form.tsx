@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { submitPost } from "twitter/actions/posts";
 import { ProfileAvatar } from "twitter/components/profile-avatar";
 
-export const PostForm = () => {
+export const PostForm = ({ buttonText, replyToPostId }: { buttonText?: string, replyToPostId: number }) => {
   const [text, setText] = useState("");
   const [isPending, setIsPending] = useState(false);
 
@@ -22,7 +22,7 @@ export const PostForm = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsPending(true);
-    await submitPost(text);
+    await submitPost({text, replyToPostId});
     setText("");
     setIsPending(false);
     router.refresh();
@@ -30,10 +30,10 @@ export const PostForm = () => {
 
   return (
     <div className="flex flex-row border-b border-solid border-zinc-800 p-4">
-      <div className="w-2/12 flex justify-center">
-        <ProfileAvatar size={64} />
+      <div className="flex justify-center">
+        <ProfileAvatar size={48} />
       </div>
-      <form className="w-10/12" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="grow pl-3">
         <textarea
           onChange={(e) => setText(e.target.value)}
           value={text}
@@ -42,22 +42,22 @@ export const PostForm = () => {
           disabled={isPending}
         />
         <div className="w-full flex flex-row justify-end mt-2 pb-1">
-            {isPending ? (
-              <Loader2 size={24} className="my-auto animate-spin" />
-            ) : (
-              <span className="my-auto">
-                <span className={text.length > 140 ? "text-red-500" : ""}>
-                  {text.length}
-                </span>{" "}
-                / 140
-              </span>              
-            )}
-            <input
-              type="submit"
-              className="bg-sky-500 rounded-full font-semibold py-2 px-8 ml-3 disabled:opacity-60 hover:opacity-80 transition-opacity cursor-pointer"
-              value="Post"
-              disabled={!isEnabled || isPending}
-            />
+          {isPending ? (
+            <Loader2 size={24} className="my-auto animate-spin" />
+          ) : (
+            <span className="my-auto">
+              <span className={text.length > 140 ? "text-red-500" : ""}>
+                {text.length}
+              </span>{" "}
+              / 140
+            </span>
+          )}
+          <input
+            type="submit"
+            className="bg-sky-500 rounded-full font-semibold py-2 px-8 ml-3 disabled:opacity-60 hover:opacity-80 transition-opacity cursor-pointer"
+            value={buttonText || "Post"}
+            disabled={!isEnabled || isPending}
+          />
         </div>
       </form>
     </div>
