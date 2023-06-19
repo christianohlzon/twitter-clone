@@ -1,4 +1,4 @@
-import { Feed } from "twitter/components/feed";
+import { FeedEntriesFeed } from "twitter/components/feed";
 import { getUserAndPostsByUsername } from "twitter/db/users";
 
 export default async function User({ params }: { params: { user: string } }) {
@@ -16,5 +16,5 @@ export default async function User({ params }: { params: { user: string } }) {
     );
   }
 
-  return <Feed feedEntries={user.feedEntries} />;
+  return <FeedEntriesFeed feedEntries={user.feedEntries} />;
 }

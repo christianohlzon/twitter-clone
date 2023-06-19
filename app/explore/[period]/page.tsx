@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ExploreFeed } from "twitter/components/feed";
+import { PostFeed } from "twitter/components/feed";
 import { Topbar } from "twitter/components/topbar";
 import { getExploreFeed } from "twitter/db/feed-entries";
 
@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: { period: string } }) {
           );
         })}
       </div>
-      <ExploreFeed posts={posts} />
+      <PostFeed posts={posts} />
     </div>
   );
 }

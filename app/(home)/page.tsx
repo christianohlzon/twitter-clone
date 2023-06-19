@@ -1,5 +1,5 @@
 import { getFollowingFeedByUserId } from "twitter/db/feed-entries";
-import { Feed } from "twitter/components/feed";
+import { FeedEntriesFeed } from "twitter/components/feed";
 import { getSignedInUser } from "twitter/actions/auth";
 import { DecodedJWT } from "twitter/utils/middleware-auth";
 
@@ -12,5 +12,5 @@ export default async function Home() {
   }
   
   const feedEntries = await getFollowingFeedByUserId(user.id);
-  return <Feed feedEntries={feedEntries} />;
+  return <FeedEntriesFeed feedEntries={feedEntries} />;
 }

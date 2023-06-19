@@ -1,5 +1,5 @@
 import { getUserAndRepliesByUsername } from "twitter/db/users";
-import { Feed } from "twitter/components/feed";
+import { FeedEntriesFeed } from "twitter/components/feed";
 
 export default async function Replies({
   params,
@@ -17,5 +17,5 @@ export default async function Replies({
       </h2>
     );
   }
-  return <Feed feedEntries={user.feedEntries} />;
+  return <FeedEntriesFeed feedEntries={user.feedEntries} />;
 }

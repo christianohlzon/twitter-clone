@@ -6,7 +6,7 @@ import {
 } from "twitter/db/schema";
 import { FeedPost } from "twitter/components/post";
 
-export const Feed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
+export const FeedEntriesFeed = async ({ feedEntries }: { feedEntries: FeedEntry[] }) => {
   const currentUser = await getSignedInUserOrUndefined();
   return (
     <div>
@@ -40,7 +40,7 @@ export const LikeFeed = async ({ likes }: { likes: PostLikeWithPost[] }) => {
   );
 };
 
-export const ExploreFeed = async ({
+export const PostFeed = async ({
   posts,
 }: {
   posts: PostWithRelations[];
