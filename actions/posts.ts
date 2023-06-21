@@ -9,7 +9,7 @@ export const submitPost = async ({
   replyToPostId,
 }: {
   text: string;
-  replyToPostId: number;
+  replyToPostId?: number;
 }) => {
   const user = await getSignedInUser();
   const post = await createPost({ text, userId: user.id, replyToPostId });

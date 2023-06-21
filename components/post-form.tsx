@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import { submitPost } from "twitter/actions/posts";
 import { ProfileAvatar } from "twitter/components/profile-avatar";
 
-export const PostForm = ({ buttonText, replyToPostId }: { buttonText?: string, replyToPostId: number }) => {
+export const PostForm = ({ buttonText, replyToPostId }: { buttonText?: string, replyToPostId?: number }) => {
   const [text, setText] = useState("");
   const [isPending, setIsPending] = useState(false);
 
