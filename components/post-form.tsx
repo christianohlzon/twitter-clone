@@ -51,6 +51,7 @@ export const PostForm = ({
           className={textAreaClassName}
           rows={3}
           disabled={isPending}
+          autoFocus={replyToPostId ? true : false}
         />
         <div className="w-full flex flex-row justify-end mt-2 pb-1">
           {isPending ? (
