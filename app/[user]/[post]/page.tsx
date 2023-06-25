@@ -1,6 +1,6 @@
 import { getPostById } from "twitter/db/posts";
 import { Topbar } from "twitter/components/topbar";
-import { Post } from "twitter/components/post";
+import { FeedPost, Post } from "twitter/components/post";
 import { getSignedInUserOrUndefined } from "twitter/actions/auth";
 import { getRepliesToPostId } from "twitter/db/posts";
 import { PostFeed } from "twitter/components/feed";
@@ -29,6 +29,14 @@ export default async function Page({
   return (
     <>
       <Topbar title="Post" showGoBackButton={true} />
+      {post.replyToPost && (
+        <FeedPost
+          isRepost={false}
+          post={post.replyToPost}
+          currentUser={user}
+          showChildConnection={true}
+        />
+      )}
       <Post post={post} currentUser={user} />
       {children}
       <PostFeed posts={replies} />

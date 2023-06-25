@@ -75,21 +75,31 @@ export const FeedPost = ({
   isRepost,
   entryUser,
   currentUser,
+  showChildConnection,
 }:
   | {
       post: PostWithRelations;
       isRepost: boolean;
       entryUser: User;
       currentUser?: DecodedJWT;
+      showChildConnection?: boolean;
     }
   | {
       post: PostWithRelations;
       isRepost: false;
-      entryUser: null;
+      entryUser?: null;
       currentUser?: DecodedJWT;
+      showChildConnection?: boolean;
     }) => {
   return (
-    <div className="px-4 py-2 w-full border-b border-zinc-800 relative">
+    <div
+      className={`px-4 py-2 w-full border-zinc-800 relative ${
+        showChildConnection ? "" : "border-b"
+      }`}
+    >
+      {showChildConnection && (
+        <div className="absolute top-8 -z-10 left-[39px] w-0.5 h-full bg-zinc-700"></div>
+      )}
       <Link
         href={`/${post.author.username}/${post.id}`}
         className="w-full h-full absolute inset-0 z-10"
@@ -103,7 +113,7 @@ export const FeedPost = ({
           <span className="ml-2">Retweeted by {entryUser.name}</span>
         </Link>
       )}
-      <div className="flex flex-row ">
+      <div className="flex flex-row">
         <div className="pt-2">
           <ProfileAvatar size={48} />
         </div>
@@ -160,7 +170,7 @@ export const Post = ({
 
   return (
     <>
-      <div className="px-4 py-2 pt-4 w-full border-b border-zinc-800">
+      <div className="p-4 w-full border-b border-zinc-800 relative">
         <div className="flex flex-row">
           <div className="w-12 h-12 bg-zinc-500 rounded-full mr-2"></div>
           <Link href={`/${post.author.username}`}>
@@ -171,17 +181,6 @@ export const Post = ({
           </Link>
         </div>
         <div>
-          {post.replyToPost && (
-            <span className="text-zinc-500">
-              Reply to{" "}
-              <Link
-                href={`/${post.replyToPost.author.username}`}
-                className="text-sky-500 hover:underline"
-              >
-                @{post.replyToPost.author.username}
-              </Link>
-            </span>
-          )}
           <p className="text-xl mt-3 mb-1">{post.content}</p>
           <div>
             <span className="text-zinc-500">{timeSince(post.createdAt)}</span>

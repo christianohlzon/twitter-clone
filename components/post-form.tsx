@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { submitPost } from "twitter/actions/posts";
 import { ProfileAvatar } from "twitter/components/profile-avatar";
@@ -16,6 +17,7 @@ export const PostForm = ({
 }) => {
   const [text, setText] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const pathname = usePathname();
 
   const router = useRouter();
 
@@ -31,6 +33,9 @@ export const PostForm = ({
     await submitPost({ text, replyToPostId });
     setText("");
     setIsPending(false);
+    if (replyToPostId) {
+      router.replace(pathname);
+    }
     router.refresh();
   };
 

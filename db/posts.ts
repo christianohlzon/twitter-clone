@@ -8,6 +8,18 @@ export const getPostById = async (id: number) => {
       author: true,
       likes: true,
       replies: true,
+      replyToPost: {
+        with: {
+          author: true,
+          likes: true,
+          replies: true,
+          replyToPost: {
+            with: {
+              author: true,
+            },
+          },
+        },
+      },
     },
   });
 };
