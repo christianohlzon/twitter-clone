@@ -21,12 +21,12 @@ export const Sidebar = ({ user }: { user: DecodedJWT }) => {
       href: `/${user.username}`,
       isActive: pathname.startsWith(`/${user.username}`),
     },
-    {
-      name: "Notifications",
-      icon: Bell,
-      href: "/notifications",
-      isActive: pathname.endsWith("/notifications"),
-    },
+    // {
+    //   name: "Notifications",
+    //   icon: Bell,
+    //   href: "/notifications",
+    //   isActive: pathname.endsWith("/notifications"),
+    // },
     {
       name: "Explore",
       icon: Compass,
