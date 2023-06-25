@@ -7,7 +7,13 @@ import { Loader2 } from "lucide-react";
 import { submitPost } from "twitter/actions/posts";
 import { ProfileAvatar } from "twitter/components/profile-avatar";
 
-export const PostForm = ({ buttonText, replyToPostId }: { buttonText?: string, replyToPostId?: number }) => {
+export const PostForm = ({
+  buttonText,
+  replyToPostId,
+}: {
+  buttonText?: string;
+  replyToPostId?: number;
+}) => {
   const [text, setText] = useState("");
   const [isPending, setIsPending] = useState(false);
 
@@ -22,7 +28,7 @@ export const PostForm = ({ buttonText, replyToPostId }: { buttonText?: string, r
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsPending(true);
-    await submitPost({text, replyToPostId});
+    await submitPost({ text, replyToPostId });
     setText("");
     setIsPending(false);
     router.refresh();

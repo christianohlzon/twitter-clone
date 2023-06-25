@@ -9,6 +9,8 @@ import { timeSince } from "twitter/utils/time";
 import { DecodedJWT } from "twitter/utils/middleware-auth";
 import { likePost, unlikePost } from "twitter/actions/post-likes";
 import { ProfileAvatar } from "./profile-avatar";
+import { PostForm } from "./post-form";
+import { useSearchParams } from "next/navigation";
 
 export const PostInteraction = ({
   likes,
@@ -43,7 +45,10 @@ export const PostInteraction = ({
     isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0;
   return (
     <form className="text-sm text-zinc-500 mt-2 flex flex-row">
-      <Link href={`/${postAuthor.username}/${postId}/reply`} className="flex items-center hover:text-sky-500 relative z-20">
+      <Link
+        href={`/${postAuthor.username}/${postId}?reply=true`}
+        className="flex items-center hover:text-sky-500 relative z-20"
+      >
         <MessageCircle size={16} />
         <span className="ml-1">{replies}</span>
       </Link>
@@ -150,40 +155,50 @@ export const Post = ({
   post: PostWithRelations;
   currentUser?: DecodedJWT;
 }) => {
+  const searchParams = useSearchParams();
+  const isReplyFormOpen = searchParams.get("reply") === "true";
+
   return (
-    <div className="px-4 py-2 pt-4 w-full border-b border-zinc-800">
-      <div className="flex flex-row">
-        <div className="w-12 h-12 bg-zinc-500 rounded-full mr-2"></div>
-        <Link href={`/${post.author.username}`}>
-          <span className="font-semibold block">{post.author.name}</span>
-          <span className=" text-zinc-500 block">@{post.author.username}</span>
-        </Link>
-      </div>
-      <div>
-        {post.replyToPost && (
-          <span className="text-zinc-500">
-            Reply to{" "}
-            <Link
-              href={`/${post.replyToPost.author.username}`}
-              className="text-sky-500 hover:underline"
-            >
-              @{post.replyToPost.author.username}
-            </Link>
-          </span>
-        )}
-        <p className="text-xl mt-3 mb-1">{post.content}</p>
-        <div>
-          <span className="text-zinc-500">{timeSince(post.createdAt)}</span>
+    <>
+      <div className="px-4 py-2 pt-4 w-full border-b border-zinc-800">
+        <div className="flex flex-row">
+          <div className="w-12 h-12 bg-zinc-500 rounded-full mr-2"></div>
+          <Link href={`/${post.author.username}`}>
+            <span className="font-semibold block">{post.author.name}</span>
+            <span className=" text-zinc-500 block">
+              @{post.author.username}
+            </span>
+          </Link>
         </div>
-        <PostInteraction
-          postId={post.id}
-          postAuthor={post.author}
-          likes={post.likes}
-          repost={0}
-          replies={post.replies.length}
-          currentUser={currentUser}
-        />
+        <div>
+          {post.replyToPost && (
+            <span className="text-zinc-500">
+              Reply to{" "}
+              <Link
+                href={`/${post.replyToPost.author.username}`}
+                className="text-sky-500 hover:underline"
+              >
+                @{post.replyToPost.author.username}
+              </Link>
+            </span>
+          )}
+          <p className="text-xl mt-3 mb-1">{post.content}</p>
+          <div>
+            <span className="text-zinc-500">{timeSince(post.createdAt)}</span>
+          </div>
+          <PostInteraction
+            postId={post.id}
+            postAuthor={post.author}
+            likes={post.likes}
+            repost={0}
+            replies={post.replies.length}
+            currentUser={currentUser}
+          />
+        </div>
       </div>
-    </div>
+      {isReplyFormOpen && (
+        <PostForm replyToPostId={post.id} buttonText="Reply" />
+      )}
+    </>
   );
 };
