@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 import { PostWithRelations, User, PostLike } from "twitter/db/schema";
 import { timeSince } from "twitter/utils/time";
@@ -10,7 +11,7 @@ import { DecodedJWT } from "twitter/utils/middleware-auth";
 import { likePost, unlikePost } from "twitter/actions/post-likes";
 import { ProfileAvatar } from "./profile-avatar";
 import { PostForm } from "./post-form";
-import { useSearchParams } from "next/navigation";
+import { Modal } from "./modal";
 
 export const PostInteraction = ({
   likes,
@@ -31,6 +32,7 @@ export const PostInteraction = ({
     !currentUser || likes.some((like) => like.userId === currentUser.id);
 
   const [isLiked, setIsLiked] = useState(isLikedByUser);
+  const [isRepostModalOpen, setIsRepostModalOpen] = useState(false);
   const heartAction = () => {
     if (isLiked) {
       setIsLiked(false);
@@ -44,29 +46,40 @@ export const PostInteraction = ({
   const likeCountAdjustment =
     isLikedByUser && isLiked ? 0 : isLiked ? 1 : isLikedByUser ? -1 : 0;
   return (
-    <form className="text-sm text-zinc-500 mt-2 flex flex-row">
-      <Link
-        href={`/${postAuthor.username}/${postId}?reply=true`}
-        className="flex items-center hover:text-sky-500 relative z-20"
-      >
-        <MessageCircle size={16} />
-        <span className="ml-1">{replies}</span>
-      </Link>
-      {/* <button className="flex items-center ml-4">
-        <Repeat2 size={16} />
-        <span className="ml-1">{repost}</span>
-      </button> */}
-      <button
-        className="flex items-center ml-4 hover:text-rose-500 relative z-20"
-        formAction={heartAction}
-      >
-        <Heart
-          size={16}
-          className={`${isLiked ? "text-rose-500 fill-rose-500" : ""}`}
-        />
-        <span className="ml-1">{likes.length + likeCountAdjustment}</span>
-      </button>
-    </form>
+    <>
+      <form className="text-zinc-500 mt-2 flex flex-row text-sm">
+        <Link
+          href={`/${postAuthor.username}/${postId}?reply=true`}
+          className="flex items-center hover:text-sky-500 relative z-20"
+        >
+          <MessageCircle size={16} />
+          <span className="ml-1">{replies}</span>
+        </Link>
+        <button
+          className="flex items-center ml-4 hover:text-sky-500 z-20 relative"
+          onClick={() => setIsRepostModalOpen(true)}
+          type="button"
+        >
+          <Repeat2 size={16} />
+          <span className="ml-1">{repost}</span>
+        </button>
+        <button
+          className="flex items-center ml-4 hover:text-rose-500 relative z-20"
+          formAction={heartAction}
+        >
+          <Heart
+            size={16}
+            className={`${isLiked ? "text-rose-500 fill-rose-500" : ""}`}
+          />
+          <span className="ml-1">{likes.length + likeCountAdjustment}</span>
+        </button>
+      </form>
+      {isRepostModalOpen && (
+        <Modal closeModal={() => setIsRepostModalOpen(false)}>
+          <p>Repost</p>
+        </Modal>
+      )}
+    </>
   );
 };
 
@@ -195,7 +208,7 @@ export const Post = ({
           />
         </div>
       </div>
-      {isReplyFormOpen && (
+      {isReplyFormOpen && !!currentUser && (
         <PostForm replyToPostId={post.id} buttonText="Reply" />
       )}
     </>
